@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gran Império Hamburgueria</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0d0a08;
+    --bg-panel:#171210;
+    --bg-card:#1e1713;
+    --line:#332720;
+    --gold:#f0a824;
+    --gold-deep:#c9860f;
+    --red:#e0342b;
+    --red-deep:#a8241d;
+    --cream:#f6efe3;
+    --muted:#b7a798;
+    --shadow: 0 10px 30px rgba(0,0,0,.45);
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:
+      radial-gradient(1100px 500px at 50% -10%, #241a12 0%, var(--bg) 55%),
+      var(--bg);
+    color:var(--cream);
+    font-family:'Inter',sans-serif;
+    padding-bottom:90px;
+  }
+  h1,h2,h3,.display{
+    font-family:'Anton',sans-serif;
+    font-weight:400;
+    letter-spacing:.5px;
+  }
+  a{color:inherit;}
+  img{max-width:100%;display:block;}
+
+  /* Header */
+  header{
+    position:sticky; top:0; z-index:40;
+    background:rgba(13,10,8,.92);
+    backdrop-filter:blur(6px);
+    border-bottom:1px solid var(--line);
+  }
+  .header-inner{
+    max-width:960px; margin:0 auto;
+    display:flex; align-items:center; justify-content:space-between;
+    padding:10px 16px;
+  }
+  .brand{display:flex; align-items:center; gap:10px;}
+  .brand img{height:46px; width:auto;}
+  .brand-text{line-height:1.05;}
+  .brand-text .name{font-family:'Anton',sans-serif; font-size:19px; color:var(--gold); letter-spacing:.5px;}
+  .brand-text .tag{font-size:11px; color:var(--muted);}
+  .cart-btn{
+    position:relative;
+    background:var(--red);
+    border:none; color:#fff; border-radius:10px;
+    padding:10px 14px; display:flex; align-items:center; gap:8px;
+    font-weight:700; font-size:14px; cursor:pointer;
+  }
+  .cart-count{
+    position:absolute; top:-7px; right:-7px;
+    background:var(--gold); color:#1a1108;
+    font-size:11px; font-weight:800;
+    min-width:20px; height:20px; border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
+  }
+
+  /* Hero */
+  .hero{
+    max-width:960px; margin:0 auto;
+    padding:34px 16px 18px;
+    text-align:center;
+  }
+  .hero h1{
+    font-size:clamp(30px,7vw,48px);
+    margin:0 0 12px;
+    color:var(--cream);
+  }
+  .hero h1 span{color:var(--red);}
+  .hero-logo{
+    height:110px; width:auto;
+    margin:0 auto 14px;
+    filter:drop-shadow(0 8px 18px rgba(0,0,0,.5));
+  }
+  .hero p{color:var(--muted); max-width:440px; margin:0 auto 18px; font-size:15px;}
+  .hero-actions{display:flex; gap:10px; justify-content:center; flex-wrap:wrap;}
+  .btn{
+    display:inline-flex; align-items:center; gap:8px;
+    padding:12px 20px; border-radius:10px; border:none;
+    font-weight:700; font-size:14px; cursor:pointer; text-decoration:none;
+  }
+  .btn-primary{background:var(--gold); color:#1a1108;}
+  .btn-ghost{background:transparent; color:var(--cream); border:1px solid var(--line);}
+  .socials{margin-top:16px; display:flex; gap:14px; justify-content:center;}
+  .socials a{
+    font-size:13px; color:var(--muted); border:1px solid var(--line);
+    padding:7px 14px; border-radius:20px;
+    display:flex; align-items:center; gap:7px;
+    text-decoration:none;
+  }
+  .socials a:first-child svg{color:#E1306C;}
+  .socials a:last-child svg{color:#25D366;}
+
+  /* Category nav */
+  .cat-nav{
+    max-width:960px; margin:0 auto;
+    display:flex; gap:8px; overflow-x:auto;
+    padding:6px 16px 16px;
+    scrollbar-width:none;
+  }
+  .cat-nav::-webkit-scrollbar{display:none;}
+  .cat-pill{
+    flex:0 0 auto;
+    background:var(--bg-panel); border:1px solid var(--line);
+    color:var(--muted); padding:9px 15px; border-radius:20px;
+    font-size:13px; font-weight:600; text-decoration:none; white-space:nowrap;
+  }
+  .cat-pill.active, .cat-pill:hover{ background:var(--red); color:#fff; border-color:var(--red);}
+
+  main{max-width:960px; margin:0 auto; padding:0 16px;}
+
+  .section{padding:28px 0 8px; border-top:1px solid var(--line);}
+  .section:first-of-type{border-top:none;}
+  .section-head{margin-bottom:14px;}
+  .section-head h2{font-size:26px; color:var(--gold); margin:0;}
+  .section-head p{margin:4px 0 0; color:var(--muted); font-size:13px;}
+
+  .subgroup-title{
+    font-size:13px; text-transform:uppercase; letter-spacing:1px;
+    color:var(--red); font-weight:800; margin:20px 0 10px;
+  }
+
+  .grid{display:grid; grid-template-columns:1fr; gap:12px;}
+
+  .card{
+    background:var(--bg-card); border:1px solid var(--line);
+    border-radius:14px; padding:14px 14px 12px;
+  }
+  .card-top{display:flex; justify-content:space-between; gap:10px;}
+  .card-name{font-weight:700; font-size:15.5px; color:var(--cream);}
+  .card-desc{color:var(--muted); font-size:12.5px; margin-top:4px; line-height:1.45;}
+  .card-note{color:var(--gold); font-size:11.5px; margin-top:4px; font-weight:600;}
+  .card-bottom{
+    display:flex; align-items:center; justify-content:space-between;
+    margin-top:12px; gap:10px; flex-wrap:wrap;
+  }
+  .price{font-weight:800; color:var(--gold); font-size:15px; white-space:nowrap;}
+  .old-price{color:var(--muted); text-decoration:line-through; font-size:12px; margin-right:6px;}
+  .variant-row{display:flex; gap:8px; flex-wrap:wrap;}
+  .variant-btn{
+    background:var(--bg-panel); border:1px solid var(--line); color:var(--cream);
+    border-radius:9px; padding:9px 12px; font-size:12.5px; font-weight:600; cursor:pointer;
+    display:flex; flex-direction:column; align-items:flex-start; gap:2px; min-width:104px;
+  }
+  .variant-btn small{color:var(--muted); font-weight:500;}
+  .variant-btn .v-price{color:var(--gold); font-weight:800;}
+  .variant-btn:active{transform:scale(.97);}
+  .add-btn{
+    background:var(--red); color:#fff; border:none; border-radius:9px;
+    padding:10px 16px; font-weight:700; font-size:13px; cursor:pointer;
+  }
+  .add-btn:active{transform:scale(.97);}
+
+  footer{
+    max-width:960px; margin:30px auto 0; padding:24px 16px 10px;
+    border-top:1px solid var(--line); color:var(--muted); font-size:12.5px;
+    text-align:center;
+  }
+  footer .fname{color:var(--gold); font-family:'Anton',sans-serif; font-size:18px; letter-spacing:.5px;}
+
+  /* Floating checkout bar */
+  .floating-bar{
+    position:fixed; left:0; right:0; bottom:0; z-index:45;
+    background:linear-gradient(180deg, transparent, rgba(13,10,8,.7) 20%, var(--bg) 55%);
+    padding:14px 16px 16px;
+    display:none;
+  }
+  .floating-bar.show{display:block;}
+  .floating-inner{
+    max-width:960px; margin:0 auto;
+    background:var(--bg-panel); border:1px solid var(--line);
+    border-radius:14px; padding:12px 14px;
+    display:flex; align-items:center; justify-content:space-between;
+    box-shadow:var(--shadow);
+  }
+  .floating-inner .info{font-size:13px; color:var(--muted);}
+  .floating-inner .total{font-family:'Anton',sans-serif; color:var(--gold); font-size:19px;}
+  .floating-inner button{
+    background:var(--red); color:#fff; border:none; border-radius:10px;
+    padding:12px 18px; font-weight:700; font-size:14px; cursor:pointer;
+  }
+
+  /* Cart drawer */
+  .overlay{
+    position:fixed; inset:0; background:rgba(0,0,0,.6); z-index:60;
+    opacity:0; pointer-events:none; transition:opacity .2s;
+  }
+  .overlay.open{opacity:1; pointer-events:auto;}
+  .drawer{
+    position:fixed; right:0; top:0; bottom:0; width:min(420px,92vw); z-index:61;
+    background:var(--bg-panel); border-left:1px solid var(--line);
+    transform:translateX(100%); transition:transform .25s ease; display:flex; flex-direction:column;
+  }
+  .drawer.open{transform:translateX(0);}
+  .drawer-head{
+    padding:16px; border-bottom:1px solid var(--line);
+    display:flex; align-items:center; justify-content:space-between;
+  }
+  .drawer-head h3{margin:0; font-size:20px; color:var(--gold);}
+  .drawer-close{background:none; border:none; color:var(--cream); font-size:22px; cursor:pointer;}
+  .drawer-items{flex:1; overflow-y:auto; padding:10px 16px;}
+  .empty-cart{color:var(--muted); text-align:center; padding:40px 10px; font-size:14px;}
+  .drawer-item{
+    display:flex; justify-content:space-between; gap:10px;
+    padding:12px 0; border-bottom:1px solid var(--line);
+  }
+  .di-name{font-weight:700; font-size:14px;}
+  .di-variant{color:var(--muted); font-size:12px;}
+  .di-qty{display:flex; align-items:center; gap:8px; margin-top:8px;}
+  .qty-btn{
+    width:26px; height:26px; border-radius:6px; border:1px solid var(--line);
+    background:var(--bg-card); color:var(--cream); font-size:15px; cursor:pointer; line-height:1;
+  }
+  .di-right{text-align:right; display:flex; flex-direction:column; align-items:flex-end; justify-content:space-between;}
+  .di-price{font-weight:800; color:var(--gold); font-size:14px;}
+  .di-remove{color:var(--red); font-size:12px; background:none; border:none; cursor:pointer; padding:0;}
+  .drawer-foot{padding:16px; border-top:1px solid var(--line);}
+  .drawer-total-row{display:flex; justify-content:space-between; margin-bottom:12px; font-size:15px;}
+  .drawer-total-row .t{font-family:'Anton',sans-serif; color:var(--gold); font-size:22px;}
+  .field{margin-bottom:10px;}
+  .field label{font-size:12px; color:var(--muted); display:block; margin-bottom:5px;}
+  .field select, .field input, .field textarea{
+    width:100%; background:var(--bg-card); border:1px solid var(--line);
+    color:var(--cream); border-radius:8px; padding:9px 10px; font-size:13px; font-family:inherit;
+  }
+  .whats-btn{
+    width:100%; background:#25D366; color:#08240f; border:none; border-radius:10px;
+    padding:13px; font-weight:800; font-size:14.5px; cursor:pointer;
+    display:flex; align-items:center; justify-content:center; gap:8px;
+  }
+  .whats-btn:disabled{opacity:.5;}
+
+  @media (min-width:640px){
+    .grid{grid-template-columns:1fr 1fr;}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="brand">
+      <img src="Logo_Gran Imperio Hamburgueria.png" alt="Gran Império">
+      <div class="brand-text">
+        <div class="name">GRAN IMPÉRIO</div>
+        <div class="tag">Hamburgueria · desde 2013</div>
+      </div>
+    </div>
+    <button class="cart-btn" onclick="openCart()">
+      🛍️ Sacola
+      <span class="cart-count" id="cartCount" style="display:none;">0</span>
+    </button>
+  </div>
+</header>
+
+<section class="hero">
+  <h1>Fome de <span>Império</span>?</h1>
+  <img src="Logo_Gran Imperio Hamburgueria.png" alt="Gran Império" class="hero-logo">
+  <p>Monte seu pedido e envie direto pro nosso WhatsApp, sem enrolação.</p>
+  <div class="hero-actions">
+    <a href="#hamburgueres" class="btn btn-primary">Ver cardápio</a>
+    <a href="https://wa.me/5561998416130" target="_blank" class="btn btn-ghost">Chamar no WhatsApp</a>
+  </div>
+  <div class="socials">
+    <a href="https://www.instagram.com/gran_imperio_" target="_blank">
+      <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>
+      @gran_imperio_
+    </a>
+    <a href="https://wa.me/5561998416130" target="_blank">
+      <svg viewBox="0 0 32 32" width="16" height="16" fill="currentColor"><path d="M16.001 2.667c-7.363 0-13.334 5.97-13.334 13.333 0 2.351.615 4.646 1.781 6.666l-1.895 6.928a1 1 0 0 0 1.225 1.225l6.928-1.895a13.29 13.29 0 0 0 6.666 1.781h.001c7.363 0 13.333-5.97 13.333-13.333S23.364 2.667 16.001 2.667zm7.797 18.916c-.325.914-1.891 1.744-2.613 1.822-.669.073-1.514.104-2.446-.153-.564-.156-1.288-.398-2.221-.782-3.911-1.688-6.462-5.6-6.66-5.862-.196-.262-1.593-2.117-1.593-4.038 0-1.92 1.008-2.865 1.365-3.256.357-.392.782-.49 1.043-.49.262 0 .523.003.752.014.24.011.564-.091.882.673.325.783 1.104 2.702 1.201 2.898.098.196.163.425.033.687-.13.262-.196.425-.392.653-.196.229-.412.51-.588.686-.196.196-.4.409-.171.804.229.392 1.017 1.68 2.185 2.72 1.501 1.338 2.766 1.752 3.158 1.947.392.196.62.163.849-.098.229-.262.98-1.143 1.242-1.535.262-.392.523-.327.882-.196.359.13 2.278 1.075 2.669 1.271.392.196.653.294.752.457.098.163.098.947-.227 1.86z"/></svg>
+      (61) 99841-6130
+    </a>
+  </div>
+</section>
+
+<nav class="cat-nav" id="catNav">
+  <a href="#hamburgueres" class="cat-pill">Hambúrgueres</a>
+  <a href="#gourmet" class="cat-pill">Gourmet & Angus</a>
+  <a href="#promocoes" class="cat-pill">Promoções</a>
+  <a href="#combos" class="cat-pill">Combos</a>
+  <a href="#pizzas" class="cat-pill">Pizzas</a>
+  <a href="#esfirras" class="cat-pill">Esfirras</a>
+  <a href="#porcoes" class="cat-pill">Porções & Adicionais</a>
+  <a href="#bebidas" class="cat-pill">Bebidas</a>
+  <a href="#acai" class="cat-pill">Açaí</a>
+</nav>
+
+<main id="menuRoot"></main>
+
+<footer>
+  <div class="fname">GRAN IMPÉRIO</div>
+  <p>Luziânia, Goiás · Delivery e retirada no local<br>Imagens meramente ilustrativas. Preços sujeitos a alteração.</p>
+</footer>
+
+<div class="floating-bar" id="floatingBar">
+  <div class="floating-inner">
+    <div class="info">
+      <div id="floatCount">0 itens</div>
+      <div class="total" id="floatTotal">R$ 0,00</div>
+    </div>
+    <button onclick="openCart()">Ver sacola</button>
+  </div>
+</div>
+
+<div class="overlay" id="overlay" onclick="closeCart()"></div>
+<aside class="drawer" id="drawer">
+  <div class="drawer-head">
+    <h3>Sua sacola</h3>
+    <button class="drawer-close" onclick="closeCart()">✕</button>
+  </div>
+  <div class="drawer-items" id="drawerItems"></div>
+  <div class="drawer-foot">
+    <div class="drawer-total-row">
+      <span>Total</span>
+      <span class="t" id="drawerTotal">R$ 0,00</span>
+    </div>
+    <div class="field">
+      <label>Seu nome</label>
+      <input id="custName" placeholder="Nome" />
+    </div>
+    <div class="field">
+      <label>Entrega</label>
+      <select id="deliveryType">
+        <option value="Retirada no local">Retirada no local</option>
+        <option value="Delivery">Delivery (entregar no meu endereço)</option>
+      </select>
+    </div>
+    <div class="field" id="addressField" style="display:none;">
+      <label>Endereço</label>
+      <textarea id="address" rows="2" placeholder="Rua, quadra, lote, bairro, referência"></textarea>
+    </div>
+    <div class="field">
+      <label>Observações (opcional)</label>
+      <textarea id="obs" rows="2" placeholder="Ex: sem cebola, ponto da carne..."></textarea>
+    </div>
+    <button class="whats-btn" id="sendBtn" onclick="sendOrder()">
+      ✅ Fazer pedido no WhatsApp
+    </button>
+  </div>
+</aside>
+
+<script>
+/* ---------------- MENU DATA ---------------- */
+const MENU = [
+  {
+    id:"hamburgueres", nav:"hamburgueres", title:"Hambúrgueres Tradicionais",
+    subtitle:"Artesanais de 80g, com queijo muçarela.",
+    items:[
+      {name:"X-Salada", desc:"Pão, hambúrguer artesanal 80g, queijo muçarela, alface e tomate.", variants:[["Só sanduíche",15.00],["Trio",23.00]]},
+      {name:"X-Salada Especial", desc:"Pão, hambúrguer 80g, queijo muçarela, ovo, alface e tomate.", variants:[["Só sanduíche",16.00],["Trio",23.00]]},
+      {name:"X-Bacon", desc:"Pão, hambúrguer 80g, queijo muçarela e bacon.", variants:[["Só sanduíche",17.00],["Trio",25.00]]},
+      {name:"X-Bacon Salada", desc:"Pão, hambúrguer 80g, queijo muçarela, bacon, alface e tomate.", variants:[["Só sanduíche",17.00],["Trio",24.00]]},
+      {name:"X-Tudão", desc:"Pão, hambúrguer 80g, queijo muçarela, ovo, salsicha, alface, tomate, milho e bacon.", variants:[["Só sanduíche",26.00],["Combo c/ batata P + refri 200ml",30.00]]},
+      {name:"Gran Especial", desc:"Pão, hambúrguer 80g, queijo muçarela, ovo, molho de churrasco, alface e tomate.", variants:[["Só sanduíche",22.00],["Trio",26.00]]},
+      {name:"Império Grill", desc:"Pão, hambúrguer 80g, queijo muçarela, bacon, alface, tomate, cebola ao shoyo e molho de churrasco.", variants:[["Só sanduíche",24.00],["Trio",28.00]]},
+      {name:"Império da Casa", desc:"Pão, hambúrguer 80g, queijo muçarela, ovo, batata palha, bacon, milho, alface e tomate.", variants:[["Só sanduíche",26.00],["Trio",30.00]]},
+      {name:"Gran Monster", desc:"Pão, 2 hambúrgueres 80g, queijo muçarela, ovo, salsicha, bacon, alface, tomate e milho.", variants:[["Só sanduíche",30.00],["Trio",37.00]]},
+      {name:"Bizarro", desc:"3 fatias de pão, 3 hambúrgueres 80g, 2 ovos, queijo muçarela, salsicha, milho, alface e tomate.", variants:[["Só sanduíche",33.00],["Trio",40.00]]},
+    ]
+  },
+  {
+    id:"gourmet", nav:"gourmet", title:"Hambúrgueres Gourmet & Linha Angus",
+    items:[
+      {group:"Gourmet"},
+      {name:"Picanha Grill", desc:"Pão, hambúrguer artesanal de picanha 120g, queijo prato, molho de churrasco, cebola à moda Império e salada.", variants:[["Só sanduíche",27.00],["Trio",32.00]]},
+      {name:"Duplo Picanha Grill", desc:"Pão, 2 hambúrgueres de picanha 120g, cheddar em dobro, molho de churrasco, cebola à moda Império e muito bacon.", variants:[["Só sanduíche",30.00],["Trio",37.00]]},
+      {name:"Duplo King", desc:"Pão, 2 hambúrgueres 120g, cheddar duplo, bacon e molho barbecue.", variants:[["Só sanduíche",29.00],["Trio",37.00]]},
+      {name:"Titã", desc:"Pão, 5 hambúrgueres 120g, 2 ovos, cheddar, queijo prato, molho barbecue, molho de churrasco, molho especial, cebola à moda Império, salada e muito bacon.", variants:[["Só sanduíche",45.00],["Trio",53.00]]},
+      {group:"Linha Angus"},
+      {name:"Califórnia", desc:"Pão brioche, hambúrguer angus 150g, molho de churrasco, molho chili, queijo empanado, tomate e cebola.", variants:[["Só sanduíche",30.00],["Trio",35.00]]},
+      {name:"Texas Burger", desc:"Pão brioche, angus 150g, molho de churrasco, barbecue caseiro, cebola, bacon e queijo gorgonzola.", variants:[["Só sanduíche",35.00],["Trio",40.00]]},
+      {name:"Oklahoma City", desc:"Pão brioche, angus 150g, queijo coalho no melaço, maionese caseira e bacon.", variants:[["Só sanduíche",40.00],["Trio",45.00]]},
+      {name:"Detroit", desc:"Pão brioche, 2 hambúrgueres angus 150g, 2 fatias de queijo prato, molho de churrasco, molho chili, onion rings, alface, tomate e bacon.", variants:[["Só sanduíche",45.00],["Trio",50.00]]},
+      {name:"Manhattan", desc:"Pão brioche, 3 hambúrgueres angus 150g, 2 ovos, 2 queijos muçarela, molho de churrasco, bacon, cebola ao molho chili, alface e tomate.", variants:[["Só sanduíche",50.00],["Trio",55.00]]},
+    ]
+  },
+  {
+    id:"promocoes", nav:"promocoes", title:"Promoções",
+    items:[
+      {name:"Triple Cheese", desc:"Pão, três hambúrgueres, queijo muçarela, queijo prato, queijo cheddar, molho de churrasco e muito bacon.", variants:[["Só sanduíche",29.00],["Trio c/ batata P + refri 220ml",35.00]]},
+      {name:"Mamute", desc:"Pão, três hambúrgueres 120g, duas fatias de queijo prato, molho de churrasco, cebola e muito bacon.", variants:[["Só sanduíche",33.00],["Trio c/ batata P + refri 220ml",40.00]]},
+      {name:"Duplo Cheese", desc:"Pão, dois hambúrgueres 80g, queijo prato, queijo cheddar, molho de churrasco, bacon, alface e tomate. Acompanha refrigerante 200ml de brinde.", oldPrice:27.99, variants:[["Só sanduíche + refri de brinde",24.99]]},
+      {name:"Australiano", desc:"Pão, hambúrguer 120g, duas fatias de queijo cheddar, molho de churrasco, cebola, bacon e salada.", variants:[["Sanduíche",28.00],["Trio",35.00]]},
+      {name:"Costela", desc:"Pão, hambúrguer 120g, duas fatias de queijo prato, molho de churrasco, cebola, bacon e salada.", variants:[["Sanduíche",28.00],["Trio",35.00]]},
+      {name:"Cheddar Bacon", desc:"Pão, hambúrguer 120g, duas fatias de queijo cheddar, molho de churrasco e bacon.", variants:[["Sanduíche",24.00],["Trio",32.00]]},
+      {name:"X-Cheddar Burg. ou Clássico", desc:"X-Cheddar Burg.: pão, hambúrguer 120g, queijo cheddar e molho de churrasco. Clássico: pão, hambúrguer 120g, queijo prato e molho de churrasco.", note:"Segundas e terças-feiras: R$ 14,99 só o sanduíche", variants:[["Só sanduíche",20.00],["Trio c/ batata P + refri 200ml",27.00]]},
+    ]
+  },
+  {
+    id:"combos", nav:"combos", title:"Combos & Combão Família",
+    items:[
+      {name:"Combo Família Império Grill", desc:"4 Império Grill + 1 batata G com cheddar e bacon + refrigerante grande 1L.", variants:[["Combo",99.99]]},
+      {name:"Combo Família Gran Especial", desc:"4 Gran Especial + 1 batata G com cheddar e bacon + refrigerante grande 1L.", variants:[["Combo",90.00]]},
+      {name:"Super Combo Família", desc:"3 Clássicos + 3 Cheddar + 1 batata G com cheddar e bacon + 1 esfirra doce G + 1 Guaraná 1,5L.", variants:[["Combo",129.00]]},
+      {name:"Mini Combo", desc:"3 mini hambúrgueres: Picanha Grill, Império Grill e Cheddar Grill + batata Crinkle + onion rings.", variants:[["Combo",75.00]]},
+      {name:"Combo Loko 1", desc:"X-Bacon + X-Salada + batata P com cheddar e bacon + 2 refrigerantes 220ml.", variants:[["Combo",50.00]]},
+      {name:"Combo Loko 2", desc:"2 Gran Especial + batata P com cheddar e bacon + 2 refrigerantes 220ml.", variants:[["Combo",55.00]]},
+      {name:"Combo Loko 3", desc:"2 Império Grill + batata P com cheddar e bacon + 2 refrigerantes 220ml.", variants:[["Combo",65.00]]},
+      {name:"Combo Loko 4", desc:"2 X-Tudão + batata P com cheddar e bacon + 2 refrigerantes 220ml.", variants:[["Combo",70.00]]},
+      {name:"Combão Família", desc:"2 X-Tudão + 2 X-Cheddar + 2 X-Clássico + 2 esfirras doces (exceto Sensação) + 1 batata G + 1 Coca-Cola 2L.", note:"Novidade!", variants:[["Combão",189.90]]},
+    ]
+  },
+  {
+    id:"pizzas", nav:"pizzas", title:"Pizzas",
+    items:[
+      {group:"Tradicionais (todas R$ 54,90)"},
+      {name:"Calabresa", desc:"Molho de tomate, mussarela, calabresa, cebola, azeitona e orégano.", variants:[["Pizza",54.90]]},
+      {name:"Mussarela", desc:"Molho, mussarela, tomate, azeitona e orégano.", variants:[["Pizza",54.90]]},
+      {name:"Portuguesa", desc:"Molho, mussarela, presunto, pimentão, tomate, ovos, azeitona, cebola e orégano.", variants:[["Pizza",54.90]]},
+      {name:"Frango Catupiry", desc:"Molho, mussarela, frango, catupiry, azeitona e orégano.", variants:[["Pizza",54.90]]},
+      {name:"Marguerita", desc:"Molho, mussarela, tomate, manjericão, parmesão, azeitona e orégano.", variants:[["Pizza",54.90]]},
+      {name:"Milho Verde", desc:"Molho, milho verde, mussarela, azeitona e orégano.", variants:[["Pizza",54.90]]},
+      {name:"Calacatu", desc:"Molho, mussarela, calabresa, catupiry, azeitona e orégano.", variants:[["Pizza",54.90]]},
+      {name:"Pizza Palmito", desc:"Molho, palmito, mussarela, tomate cereja, azeitona e orégano.", variants:[["Pizza",54.90]]},
+      {name:"Pizza de Alho", desc:"Molho, mussarela, alho frito, azeitona e orégano.", variants:[["Pizza",54.90]]},
+      {name:"Vegetariana", desc:"Molho, mussarela, brócolis, palmito, queijo coalho e catupiry.", variants:[["Pizza",54.90]]},
+      {group:"Especiais"},
+      {name:"A Moda da Casa", desc:"Molho, mussarela, lombo, bacon, palmito, azeitona e orégano.", variants:[["Pizza",63.90]]},
+      {name:"Pizza Gran Império", desc:"Molho, mussarela, lombo canadense, catupiry, provolone, parmesão, creme de leite, azeitona e orégano.", variants:[["Pizza",68.90]]},
+      {name:"Pizza Caipira", desc:"Molho, frango, milho, bacon, catupiry, mussarela, azeitona e orégano.", variants:[["Pizza",63.90]]},
+      {name:"Pizza Firenze", desc:"Molho, mussarela, presunto, palmito e catupiry, azeitona e orégano.", variants:[["Pizza",63.90]]},
+      {name:"Pizza Nordestina", desc:"Molho, carne seca, mussarela, queijo coalho, cebola, cheiro verde, azeitona e orégano.", note:"Molejo separado", variants:[["Pizza",63.90]]},
+      {group:"De Doce"},
+      {name:"Pizza Banana", desc:"Banana, mussarela, leite condensado, açúcar e canela.", variants:[["Pizza",49.99]]},
+      {name:"Pizza Banana Nevada", desc:"Banana, mussarela, chocolate branco e leite condensado.", variants:[["Pizza",55.99]]},
+      {name:"Pizza Sensação", desc:"Mussarela, chocolate e morango.", variants:[["Pizza",55.99]]},
+      {name:"Pizza Romeu e Julieta", desc:"Mussarela e goiabada cremosa.", note:"Preço a confirmar no WhatsApp", variants:[]},
+      {group:"Bordas recheadas"},
+      {name:"Borda Cheddar", desc:"Adicione borda recheada com cheddar.", variants:[["Borda",10.00]]},
+      {name:"Borda Catupiry", desc:"Adicione borda recheada com catupiry.", variants:[["Borda",10.00]]},
+      {name:"Borda Chocolate", desc:"Adicione borda recheada com chocolate.", variants:[["Borda",10.00]]},
+    ]
+  },
+  {
+    id:"esfirras", nav:"esfirras", title:"Esfirras Paulista 25cm",
+    items:[
+      {name:"Esfirra de Carne", variants:[["Esfirra",19.99]]},
+      {name:"Esfirra Carne com Queijo", variants:[["Esfirra",22.99]]},
+      {name:"Esfirra de Queijo", variants:[["Esfirra",21.99]]},
+      {name:"Esfirra de Calabresa e Queijo", variants:[["Esfirra",19.99]]},
+      {name:"Esfirra Brócolis, Bacon, Mussarela e Alho Frito", variants:[["Esfirra",21.99]]},
+      {name:"Esfirra de Frango Catupiry e Mussarela", variants:[["Esfirra",21.99]]},
+      {name:"Esfirra de Alho e Mussarela", variants:[["Esfirra",19.99]]},
+      {group:"De Doce"},
+      {name:"Esfirra Sensação", desc:"Morango e chocolate.", variants:[["Esfirra",21.99]]},
+      {name:"Esfirra Sensação Especial", desc:"Nutella, morango, chocolate branco, KitKat e uma bola de sorvete.", variants:[["Esfirra",23.99]]},
+      {name:"Esfirra Banana Nevada", desc:"Banana, mussarela, chocolate branco e leite condensado.", variants:[["Esfirra",21.90]]},
+      {name:"Esfirra Banana com Canela", desc:"Banana, mussarela, açúcar e canela.", variants:[["Esfirra",19.90]]},
+    ]
+  },
+  {
+    id:"porcoes", nav:"porcoes", title:"Porções & Adicionais",
+    items:[
+      {name:"3 Mini Hambúrguer", desc:"1 Império Grill Mini, 1 Picanha Grill Mini e 1 Cheddar Burguer Mini.", variants:[["Porção",49.90]]},
+      {name:"Batata Frita", variants:[["Batata P",7.00],["Batata M",25.00],["Batata G",30.00]]},
+      {name:"Adicionar Cheddar e Bacon na Batata", variants:[["Adicional",7.00]]},
+      {name:"Porção Onion Rings", desc:"Anéis de cebola empanados, 12 unidades.", variants:[["Porção",34.99]]},
+      {group:"Adicionais avulsos"},
+      {name:"Hambúrguer 80g", variants:[["Unidade",6.00]]},
+      {name:"Hambúrguer 120g", variants:[["Unidade",8.00]]},
+      {name:"Hambúrguer Angus 150g", variants:[["Unidade",12.00]]},
+      {name:"Queijo Empanado", variants:[["Unidade",10.00]]},
+      {name:"3 Onion Rings", variants:[["Porção",6.00]]},
+      {name:"Bacon", variants:[["Adicional",5.00]]},
+      {name:"Salsicha", variants:[["Adicional",2.00]]},
+      {name:"Ovo", variants:[["Adicional",2.00]]},
+      {name:"Milho", variants:[["Adicional",1.50]]},
+      {name:"Queijo (Mussarela, Cheddar ou Prato)", variants:[["Adicional",2.00]]},
+    ]
+  },
+  {
+    id:"bebidas", nav:"bebidas", title:"Bebidas, Milk Shake & Sucos",
+    items:[
+      {group:"Milk Shake"},
+      {name:"Milk Shake de Morango", variants:[["300ml",15.00],["500ml",19.00]]},
+      {name:"Milk Shake de Ninho", variants:[["300ml",15.00],["500ml",19.00]]},
+      {group:"Sucos Naturais (500ml)"},
+      {name:"Suco de Laranja", variants:[["500ml",14.00]]},
+      {name:"Suco de Limão", variants:[["500ml",12.00]]},
+      {group:"Sucos de Polpa"},
+      {name:"Suco de Abacaxi", variants:[["Copo",12.00]]},
+      {name:"Suco de Acerola", variants:[["Copo",12.00]]},
+      {name:"Suco de Abacaxi com Hortelã", variants:[["Copo",12.00]]},
+      {name:"Suco de Goiaba", variants:[["Copo",12.00]]},
+      {group:"Refrigerantes"},
+      {name:"Coca-Cola P", variants:[["Unidade",5.00]]},
+      {name:"Guaraná P", variants:[["Unidade",5.00]]},
+      {name:"Coca-Cola Lata", variants:[["Unidade",6.50]]},
+      {name:"Guaraná Lata", variants:[["Unidade",5.50]]},
+      {name:"Coca-Cola 2L", variants:[["Unidade",14.00]]},
+      {name:"Coca-Cola 2L Zero", variants:[["Unidade",14.00]]},
+      {name:"Guaraná 1,5L", variants:[["Unidade",9.00]]},
+      {group:"Outros"},
+      {name:"Água", variants:[["Unidade",3.00]]},
+      {name:"Suco P", variants:[["Copo",5.00]]},
+      {name:"Suco G", variants:[["Copo",9.00]]},
+    ]
+  },
+  {
+    id:"acai", nav:"acai", title:"Açaí & Vitaminas",
+    items:[
+      {name:"Açaí 300ml", desc:"Acompanha 4 adicionais à sua escolha.", variants:[["300ml",15.00]]},
+      {name:"Açaí 500ml", desc:"Acompanha 4 adicionais à sua escolha.", variants:[["500ml",18.00]]},
+      {name:"Açaí na Marmita 750ml", desc:"Acompanha todos os adicionais.", variants:[["750ml",32.00]]},
+      {name:"Adicional extra de açaí", desc:"Amendoim triturado, banana, bis, confete, granola, leite condensado, leite em pó, oreo ou paçoca — além dos 4 inclusos.", variants:[["Cada adicional extra",2.00]]},
+      {group:"Vitaminas"},
+      {name:"Vitamina de Açaí", desc:"500ml de açaí + leite Ninho.", variants:[["Vitamina",18.00]]},
+      {name:"Vitamina de Banana", desc:"Banana + leite Ninho + granola + paçoca.", variants:[["Vitamina",20.00]]},
+    ]
+  },
+];
+
+const WHATSAPP_NUMBER = "5561998416130";
+
+/* ---------------- RENDER MENU ---------------- */
+const root = document.getElementById('menuRoot');
+let itemUid = 0;
+
+MENU.forEach(section=>{
+  const sec = document.createElement('section');
+  sec.className = 'section';
+  sec.id = section.id;
+  sec.innerHTML = `<div class="section-head"><h2>${section.title}</h2>${section.subtitle? `<p>${section.subtitle}</p>`:''}</div>`;
+  const grid = document.createElement('div');
+  grid.className = 'grid';
+
+  section.items.forEach(item=>{
+    if(item.group){
+      const g = document.createElement('div');
+      g.className = 'subgroup-title';
+      g.style.gridColumn = '1 / -1';
+      g.textContent = item.group;
+      grid.appendChild(g);
+      return;
+    }
+    itemUid++;
+    const card = document.createElement('div');
+    card.className = 'card';
+    const hasMultiVariant = item.variants.length > 1;
+    const singlePrice = item.variants.length === 1 ? item.variants[0][1] : null;
+
+    let priceHtml = '';
+    if(item.variants.length === 0){
+      priceHtml = '';
+    } else if(!hasMultiVariant){
+      priceHtml = `${item.oldPrice ? `<span class="old-price">R$ ${fmt(item.oldPrice)}</span>`:''}<span class="price">R$ ${fmt(singlePrice)}</span>`;
+    }
+
+    card.innerHTML = `
+      <div class="card-top">
+        <div>
+          <div class="card-name">${item.name}</div>
+          ${item.desc ? `<div class="card-desc">${item.desc}</div>` : ''}
+          ${item.note ? `<div class="card-note">${item.note}</div>` : ''}
+        </div>
+      </div>
+      <div class="card-bottom">
+        ${hasMultiVariant ? `<div class="variant-row">${item.variants.map((v,i)=>`
+          <button class="variant-btn" onclick="addToCart('${escapeAttr(item.name)}','${escapeAttr(v[0])}',${v[1]},${itemUid}_${i})">
+            <span>${v[0]}</span><span class="v-price">R$ ${fmt(v[1])}</span>
+          </button>`).join('')}</div>`
+          : item.variants.length === 1
+            ? `<div>${priceHtml}</div><button class="add-btn" onclick="addToCart('${escapeAttr(item.name)}','${escapeAttr(item.variants[0][0])}',${item.variants[0][1]})">Adicionar</button>`
+            : `<div class="card-note">Combine no WhatsApp</div>`
+        }
+      </div>
+    `;
+    grid.appendChild(card);
+  });
+
+  sec.appendChild(grid);
+  root.appendChild(sec);
+});
+
+function fmt(n){ return n.toFixed(2).replace('.',','); }
+function escapeAttr(s){ return String(s).replace(/'/g, "\\'"); }
+
+/* nav active state on scroll */
+const pills = document.querySelectorAll('.cat-pill');
+const sections = MENU.map(s=>document.getElementById(s.id));
+window.addEventListener('scroll', ()=>{
+  let current = sections[0].id;
+  sections.forEach(s=>{
+    if(window.scrollY + 120 >= s.offsetTop) current = s.id;
+  });
+  pills.forEach(p=>{
+    p.classList.toggle('active', p.getAttribute('href') === '#'+current);
+  });
+}, {passive:true});
+
+/* ---------------- CART ---------------- */
+let cart = []; // {name, variant, price, qty}
+
+function addToCart(name, variant, price){
+  const key = name + '|' + variant;
+  const existing = cart.find(c => (c.name+'|'+c.variant) === key);
+  if(existing){ existing.qty++; }
+  else { cart.push({name, variant, price, qty:1}); }
+  renderCart();
+  flashCartButton();
+}
+
+function flashCartButton(){
+  const btn = document.querySelector('.cart-btn');
+  btn.style.transform = 'scale(1.08)';
+  setTimeout(()=> btn.style.transform = 'scale(1)', 150);
+}
+
+function changeQty(idx, delta){
+  cart[idx].qty += delta;
+  if(cart[idx].qty <= 0) cart.splice(idx,1);
+  renderCart();
+}
+
+function removeItem(idx){
+  cart.splice(idx,1);
+  renderCart();
+}
+
+function cartTotal(){
+  return cart.reduce((sum,c)=> sum + c.price*c.qty, 0);
+}
+function cartCount(){
+  return cart.reduce((sum,c)=> sum + c.qty, 0);
+}
+
+function renderCart(){
+  const count = cartCount();
+  const total = cartTotal();
+
+  const cc = document.getElementById('cartCount');
+  cc.style.display = count > 0 ? 'flex' : 'none';
+  cc.textContent = count;
+
+  const fb = document.getElementById('floatingBar');
+  fb.classList.toggle('show', count > 0);
+  document.getElementById('floatCount').textContent = count + (count===1? ' item' : ' itens');
+  document.getElementById('floatTotal').textContent = 'R$ ' + fmt(total);
+
+  const di = document.getElementById('drawerItems');
+  if(cart.length === 0){
+    di.innerHTML = `<div class="empty-cart">Sua sacola está vazia.<br>Adicione algo gostoso 😋</div>`;
+  } else {
+    di.innerHTML = cart.map((c,idx)=>`
+      <div class="drawer-item">
+        <div>
+          <div class="di-name">${c.name}</div>
+          <div class="di-variant">${c.variant}</div>
+          <div class="di-qty">
+            <button class="qty-btn" onclick="changeQty(${idx},-1)">−</button>
+            <span>${c.qty}</span>
+            <button class="qty-btn" onclick="changeQty(${idx},1)">+</button>
+          </div>
+        </div>
+        <div class="di-right">
+          <div class="di-price">R$ ${fmt(c.price*c.qty)}</div>
+          <button class="di-remove" onclick="removeItem(${idx})">remover</button>
+        </div>
+      </div>
+    `).join('');
+  }
+  document.getElementById('drawerTotal').textContent = 'R$ ' + fmt(total);
+  document.getElementById('sendBtn').disabled = cart.length === 0;
+}
+
+function openCart(){
+  document.getElementById('overlay').classList.add('open');
+  document.getElementById('drawer').classList.add('open');
+}
+function closeCart(){
+  document.getElementById('overlay').classList.remove('open');
+  document.getElementById('drawer').classList.remove('open');
+}
+
+document.getElementById('deliveryType').addEventListener('change', (e)=>{
+  document.getElementById('addressField').style.display = e.target.value === 'Delivery' ? 'block' : 'none';
+});
+
+function sendOrder(){
+  if(cart.length === 0) return;
+  const name = document.getElementById('custName').value.trim();
+  const delivery = document.getElementById('deliveryType').value;
+  const address = document.getElementById('address').value.trim();
+  const obs = document.getElementById('obs').value.trim();
+
+  let msg = ` *Pedido Gran Império* \n\n`;
+  cart.forEach(c=>{
+    msg += `▪️ ${c.qty}x ${c.name} (${c.variant}) — R$ ${fmt(c.price*c.qty)}\n`;
+  });
+  msg += `\n*Total: R$ ${fmt(cartTotal())}*\n`;
+  msg += `\n*Entrega:* ${delivery}`;
+  if(delivery === 'Delivery' && address){ msg += `\n*Endereço:* ${address}`; }
+  if(name){ msg += `\n*Nome:* ${name}`; }
+  if(obs){ msg += `\n*Obs:* ${obs}`; }
+  msg += `\n\nPedido feito pelo site`;
+
+  const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`;
+  window.open(url, '_blank');
+}
+
+renderCart();
+</script>
+</body>
+</html>
