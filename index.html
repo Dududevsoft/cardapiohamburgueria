@@ -141,7 +141,9 @@
   .card{
     background:var(--bg-card); border:1px solid var(--line);
     border-radius:14px; padding:14px 14px 12px;
+    transition:border-color .15s ease, transform .15s ease;
   }
+  .card:hover{border-color:var(--gold-deep); transform:translateY(-1px);}
   .card-top{display:flex; justify-content:space-between; gap:10px;}
   .card-name{font-weight:700; font-size:15.5px; color:var(--cream);}
   .card-desc{color:var(--muted); font-size:12.5px; margin-top:4px; line-height:1.45;}
@@ -166,6 +168,22 @@
     padding:10px 16px; font-weight:700; font-size:13px; cursor:pointer;
   }
   .add-btn:active{transform:scale(.97);}
+
+  /* Pizza meio a meio card */
+  .half-half-card{
+    background:linear-gradient(160deg, #241811, var(--bg-card));
+    border:1px solid var(--gold-deep);
+    border-radius:14px; padding:16px; margin-bottom:16px;
+  }
+  .half-half-card h3{margin:0 0 4px; color:var(--gold); font-size:18px;}
+  .half-half-card p{margin:0 0 12px; color:var(--muted); font-size:12.5px;}
+  .half-half-row{display:grid; grid-template-columns:1fr; gap:10px; margin-bottom:12px;}
+  @media (min-width:520px){ .half-half-row{grid-template-columns:1fr 1fr;} }
+  .half-half-row select{
+    width:100%; background:var(--bg-panel); border:1px solid var(--line);
+    color:var(--cream); border-radius:8px; padding:10px; font-size:13px; font-family:inherit;
+  }
+  .half-half-foot{display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap;}
 
   footer{
     max-width:960px; margin:30px auto 0; padding:24px 16px 10px;
@@ -231,7 +249,8 @@
   .di-price{font-weight:800; color:var(--gold); font-size:14px;}
   .di-remove{color:var(--red); font-size:12px; background:none; border:none; cursor:pointer; padding:0;}
   .drawer-foot{padding:16px; border-top:1px solid var(--line);}
-  .drawer-total-row{display:flex; justify-content:space-between; margin-bottom:12px; font-size:15px;}
+  .drawer-total-row{display:flex; justify-content:space-between; margin-bottom:6px; font-size:14px; color:var(--muted);}
+  .drawer-total-row.grand{margin-top:10px; margin-bottom:12px; font-size:15px; color:var(--cream);}
   .drawer-total-row .t{font-family:'Anton',sans-serif; color:var(--gold); font-size:22px;}
   .field{margin-bottom:10px;}
   .field label{font-size:12px; color:var(--muted); display:block; margin-bottom:5px;}
@@ -245,6 +264,39 @@
     display:flex; align-items:center; justify-content:center; gap:8px;
   }
   .whats-btn:disabled{opacity:.5;}
+
+  /* Toppings modal */
+  .modal-overlay{
+    position:fixed; inset:0; background:rgba(0,0,0,.65); z-index:70;
+    display:none; align-items:center; justify-content:center; padding:16px;
+  }
+  .modal-overlay.open{display:flex;}
+  .modal-box{
+    background:var(--bg-panel); border:1px solid var(--line); border-radius:16px;
+    width:min(440px,100%); max-height:88vh; overflow-y:auto;
+    padding:18px; box-shadow:var(--shadow);
+  }
+  .modal-box h3{margin:0 0 4px; color:var(--gold); font-size:19px;}
+  .modal-box .modal-sub{color:var(--muted); font-size:12.5px; margin:0 0 14px;}
+  .topping-list{display:flex; flex-direction:column; gap:8px; margin-bottom:14px;}
+  .topping-row{
+    display:flex; align-items:center; justify-content:space-between; gap:10px;
+    background:var(--bg-card); border:1px solid var(--line); border-radius:9px; padding:10px 12px;
+    cursor:pointer; user-select:none;
+  }
+  .topping-row.checked{border-color:var(--gold-deep);}
+  .topping-row .t-name{font-size:13.5px; font-weight:600;}
+  .topping-row .t-extra{font-size:11px; color:var(--gold); font-weight:700;}
+  .topping-row input{width:18px; height:18px; accent-color:var(--gold);}
+  .modal-summary{
+    display:flex; justify-content:space-between; align-items:center;
+    font-size:13px; color:var(--muted); margin-bottom:12px;
+  }
+  .modal-summary .m-price{color:var(--gold); font-family:'Anton',sans-serif; font-size:20px;}
+  .modal-actions{display:flex; gap:10px;}
+  .modal-actions button{flex:1; border:none; border-radius:10px; padding:12px; font-weight:700; font-size:13.5px; cursor:pointer;}
+  .modal-cancel{background:var(--bg-card); color:var(--cream); border:1px solid var(--line) !important;}
+  .modal-confirm{background:var(--red); color:#fff;}
 
   @media (min-width:640px){
     .grid{grid-template-columns:1fr 1fr;}
@@ -270,12 +322,10 @@
 </header>
 
 <section class="hero">
-  <h1>Fome de <span>Império</span>?</h1>
   <img src="Logo_Gran Imperio Hamburgueria.png" alt="Gran Império" class="hero-logo">
   <p>Monte seu pedido e envie direto pro nosso WhatsApp, sem enrolação.</p>
   <div class="hero-actions">
     <a href="#hamburgueres" class="btn btn-primary">Ver cardápio</a>
-    <a href="https://wa.me/5561998416130" target="_blank" class="btn btn-ghost">Chamar no WhatsApp</a>
   </div>
   <div class="socials">
     <a href="https://www.instagram.com/gran_imperio_" target="_blank">
@@ -327,6 +377,14 @@
   <div class="drawer-items" id="drawerItems"></div>
   <div class="drawer-foot">
     <div class="drawer-total-row">
+      <span>Subtotal</span>
+      <span id="drawerSubtotal">R$ 0,00</span>
+    </div>
+    <div class="drawer-total-row" id="deliveryFeeRow" style="display:none;">
+      <span>Taxa de entrega</span>
+      <span id="drawerDeliveryFee">R$ 0,00</span>
+    </div>
+    <div class="drawer-total-row grand">
       <span>Total</span>
       <span class="t" id="drawerTotal">R$ 0,00</span>
     </div>
@@ -341,9 +399,34 @@
         <option value="Delivery">Delivery (entregar no meu endereço)</option>
       </select>
     </div>
+    <div class="field" id="bairroField" style="display:none;">
+      <label>Bairro</label>
+      <select id="bairroSelect" onchange="renderCart()">
+        <option value="">Selecione o bairro</option>
+      </select>
+    </div>
     <div class="field" id="addressField" style="display:none;">
       <label>Endereço</label>
-      <textarea id="address" rows="2" placeholder="Rua, quadra, lote, bairro, referência"></textarea>
+      <textarea id="address" rows="2" placeholder="Rua, quadra, lote, referência"></textarea>
+    </div>
+    <div class="field">
+      <label>Forma de pagamento</label>
+      <select id="paymentMethod" onchange="handlePaymentChange()">
+        <option value="Cartão">Cartão</option>
+        <option value="Pix">Pix</option>
+        <option value="Dinheiro">Dinheiro</option>
+      </select>
+    </div>
+    <div class="field" id="needsChangeField" style="display:none;">
+      <label>Precisa de troco?</label>
+      <select id="needsChange" onchange="handleNeedsChangeChange()">
+        <option value="Não">Não</option>
+        <option value="Sim">Sim</option>
+      </select>
+    </div>
+    <div class="field" id="changeForField" style="display:none;">
+      <label>Troco para quanto?</label>
+      <input id="changeFor" placeholder="Ex: 100,00" />
     </div>
     <div class="field">
       <label>Observações (opcional)</label>
@@ -355,7 +438,69 @@
   </div>
 </aside>
 
+<div class="modal-overlay" id="toppingsModal">
+  <div class="modal-box">
+    <h3 id="toppingsModalTitle">Escolha 4 acompanhamentos</h3>
+    <p class="modal-sub">Os 4 primeiros são grátis. A partir do 5º, cada acompanhamento extra custa R$ 2,00.</p>
+    <div class="topping-list" id="toppingsList"></div>
+    <div class="modal-summary">
+      <span id="toppingsCountLabel">0 selecionados</span>
+      <span class="m-price" id="toppingsExtraPrice">R$ 0,00</span>
+    </div>
+    <div class="modal-actions">
+      <button class="modal-cancel" onclick="closeToppingsModal()">Cancelar</button>
+      <button class="modal-confirm" onclick="confirmToppings()">Adicionar</button>
+    </div>
+  </div>
+</div>
+
 <script>
+/* ---------------- TAXAS DE ENTREGA POR BAIRRO ---------------- */
+/* Substitua/edite os bairros e valores abaixo pelos reais de Luziânia.
+   Assim que você me mandar a lista completa, eu ajusto certinho. */
+const BAIRROS_ENTREGA = [
+  { bairro: "Centro", taxa: 5.00 },
+  { bairro: "Setor Aeroporto", taxa: 5.00 },
+  { bairro: "Vila Juracy", taxa: 6.00 },
+  { bairro: "Rosário", taxa: 5.00 },
+  { bairro: "Vila São José", taxa: 6.00 },
+  { bairro: "Dalva 0", taxa: 7.00 },
+  { bairro: "Dalva 1", taxa: 7.00 },
+  { bairro: "Dalva 2", taxa: 7.00 },
+  { bairro: "Dalva 3", taxa: 10.00 },
+  { bairro: "Sion", taxa: 10.00 },
+  { bairro: "Jardim Brasília Sul", taxa: 15.00 },
+  { bairro: "Dalva 4", taxa: 8.00 },
+  { bairro: "Dalva 5", taxa: 7.00 },
+  { bairro: "Dalva 7", taxa: 7.00 },
+  { bairro: "Dalva 8", taxa: 8.00 },
+  { bairro: "Parque Alvorada", taxa: 8.00 },
+  { bairro: "Vila Mary", taxa: 8.00 },
+  { bairro: "Setor Fumal", taxa: 5.00 },
+  { bairro: "Setor Leste", taxa: 6.00 },
+  { bairro: "São Caetano", taxa: 6.00 },
+  { bairro: "Vila Esperança", taxa: 6.00 },
+  { bairro: "Jofre Parada", taxa: 5.00 },
+  { bairro: "Diogo Machado", taxa: 5.00 },
+  { bairro: "Viegas", taxa: 5.00 },
+  { bairro: "Parque JK", taxa: 6.00 },
+  { bairro: "Serrinha", taxa: 6.00 },
+  { bairro: "Santa Luzia", taxa: 6.00 },
+  { bairro: "Vila Santa Luzia", taxa: 5.00 },
+  { bairro: "Setor Norte Maravilha", taxa: 6.00 },
+  { bairro: "Setor Kennedy", taxa: 5.00 },
+  { bairro: "Setor Sul", taxa: 6.00 },
+  { bairro: "Shis", taxa: 5.00 },
+];
+
+/* ---------------- ACOMPANHAMENTOS DE AÇAÍ ---------------- */
+const ACAI_TOPPINGS = [
+  "Amendoim triturado","Banana","Bis","Confete","Granola",
+  "Leite condensado","Leite em pó","Oreo","Paçoca"
+];
+const ACAI_FREE_COUNT = 4;
+const ACAI_EXTRA_PRICE = 2.00;
+
 /* ---------------- MENU DATA ---------------- */
 const MENU = [
   {
@@ -420,27 +565,27 @@ const MENU = [
     id:"pizzas", nav:"pizzas", title:"Pizzas",
     items:[
       {group:"Tradicionais (todas R$ 54,90)"},
-      {name:"Calabresa", desc:"Molho de tomate, mussarela, calabresa, cebola, azeitona e orégano.", variants:[["Pizza",54.90]]},
-      {name:"Mussarela", desc:"Molho, mussarela, tomate, azeitona e orégano.", variants:[["Pizza",54.90]]},
-      {name:"Portuguesa", desc:"Molho, mussarela, presunto, pimentão, tomate, ovos, azeitona, cebola e orégano.", variants:[["Pizza",54.90]]},
-      {name:"Frango Catupiry", desc:"Molho, mussarela, frango, catupiry, azeitona e orégano.", variants:[["Pizza",54.90]]},
-      {name:"Marguerita", desc:"Molho, mussarela, tomate, manjericão, parmesão, azeitona e orégano.", variants:[["Pizza",54.90]]},
-      {name:"Milho Verde", desc:"Molho, milho verde, mussarela, azeitona e orégano.", variants:[["Pizza",54.90]]},
-      {name:"Calacatu", desc:"Molho, mussarela, calabresa, catupiry, azeitona e orégano.", variants:[["Pizza",54.90]]},
-      {name:"Pizza Palmito", desc:"Molho, palmito, mussarela, tomate cereja, azeitona e orégano.", variants:[["Pizza",54.90]]},
-      {name:"Pizza de Alho", desc:"Molho, mussarela, alho frito, azeitona e orégano.", variants:[["Pizza",54.90]]},
-      {name:"Vegetariana", desc:"Molho, mussarela, brócolis, palmito, queijo coalho e catupiry.", variants:[["Pizza",54.90]]},
+      {name:"Calabresa", desc:"Molho de tomate, mussarela, calabresa, cebola, azeitona e orégano.", price:54.90, category:"salgada", variants:[["Pizza",54.90]]},
+      {name:"Mussarela", desc:"Molho, mussarela, tomate, azeitona e orégano.", price:54.90, category:"salgada", variants:[["Pizza",54.90]]},
+      {name:"Portuguesa", desc:"Molho, mussarela, presunto, pimentão, tomate, ovos, azeitona, cebola e orégano.", price:54.90, category:"salgada", variants:[["Pizza",54.90]]},
+      {name:"Frango Catupiry", desc:"Molho, mussarela, frango, catupiry, azeitona e orégano.", price:54.90, category:"salgada", variants:[["Pizza",54.90]]},
+      {name:"Marguerita", desc:"Molho, mussarela, tomate, manjericão, parmesão, azeitona e orégano.", price:54.90, category:"salgada", variants:[["Pizza",54.90]]},
+      {name:"Milho Verde", desc:"Molho, milho verde, mussarela, azeitona e orégano.", price:54.90, category:"salgada", variants:[["Pizza",54.90]]},
+      {name:"Calacatu", desc:"Molho, mussarela, calabresa, catupiry, azeitona e orégano.", price:54.90, category:"salgada", variants:[["Pizza",54.90]]},
+      {name:"Pizza Palmito", desc:"Molho, palmito, mussarela, tomate cereja, azeitona e orégano.", price:54.90, category:"salgada", variants:[["Pizza",54.90]]},
+      {name:"Pizza de Alho", desc:"Molho, mussarela, alho frito, azeitona e orégano.", price:54.90, category:"salgada", variants:[["Pizza",54.90]]},
+      {name:"Vegetariana", desc:"Molho, mussarela, brócolis, palmito, queijo coalho e catupiry.", price:54.90, category:"salgada", variants:[["Pizza",54.90]]},
       {group:"Especiais"},
-      {name:"A Moda da Casa", desc:"Molho, mussarela, lombo, bacon, palmito, azeitona e orégano.", variants:[["Pizza",63.90]]},
-      {name:"Pizza Gran Império", desc:"Molho, mussarela, lombo canadense, catupiry, provolone, parmesão, creme de leite, azeitona e orégano.", variants:[["Pizza",68.90]]},
-      {name:"Pizza Caipira", desc:"Molho, frango, milho, bacon, catupiry, mussarela, azeitona e orégano.", variants:[["Pizza",63.90]]},
-      {name:"Pizza Firenze", desc:"Molho, mussarela, presunto, palmito e catupiry, azeitona e orégano.", variants:[["Pizza",63.90]]},
-      {name:"Pizza Nordestina", desc:"Molho, carne seca, mussarela, queijo coalho, cebola, cheiro verde, azeitona e orégano.", note:"Molejo separado", variants:[["Pizza",63.90]]},
+      {name:"A Moda da Casa", desc:"Molho, mussarela, lombo, bacon, palmito, azeitona e orégano.", price:63.90, category:"salgada", variants:[["Pizza",63.90]]},
+      {name:"Pizza Gran Império", desc:"Molho, mussarela, lombo canadense, catupiry, provolone, parmesão, creme de leite, azeitona e orégano.", price:68.90, category:"salgada", variants:[["Pizza",68.90]]},
+      {name:"Pizza Caipira", desc:"Molho, frango, milho, bacon, catupiry, mussarela, azeitona e orégano.", price:63.90, category:"salgada", variants:[["Pizza",63.90]]},
+      {name:"Pizza Firenze", desc:"Molho, mussarela, presunto, palmito e catupiry, azeitona e orégano.", price:63.90, category:"salgada", variants:[["Pizza",63.90]]},
+      {name:"Pizza Nordestina", desc:"Molho, carne seca, mussarela, queijo coalho, cebola, cheiro verde, azeitona e orégano.", note:"Molejo separado", price:63.90, category:"salgada", variants:[["Pizza",63.90]]},
       {group:"De Doce"},
-      {name:"Pizza Banana", desc:"Banana, mussarela, leite condensado, açúcar e canela.", variants:[["Pizza",49.99]]},
-      {name:"Pizza Banana Nevada", desc:"Banana, mussarela, chocolate branco e leite condensado.", variants:[["Pizza",55.99]]},
-      {name:"Pizza Sensação", desc:"Mussarela, chocolate e morango.", variants:[["Pizza",55.99]]},
-      {name:"Pizza Romeu e Julieta", desc:"Mussarela e goiabada cremosa.", note:"Preço a confirmar no WhatsApp", variants:[]},
+      {name:"Pizza Banana", desc:"Banana, mussarela, leite condensado, açúcar e canela.", price:49.99, category:"doce", variants:[["Pizza",49.99]]},
+      {name:"Pizza Banana Nevada", desc:"Banana, mussarela, chocolate branco e leite condensado.", price:55.99, category:"doce", variants:[["Pizza",55.99]]},
+      {name:"Pizza Sensação", desc:"Mussarela, chocolate e morango.", price:55.99, category:"doce", variants:[["Pizza",55.99]]},
+      {name:"Pizza Romeu e Julieta", desc:"Mussarela e goiabada cremosa.", price:55.99, category:"doce", variants:[["Pizza",55.99]]},
       {group:"Bordas recheadas"},
       {name:"Borda Cheddar", desc:"Adicione borda recheada com cheddar.", variants:[["Borda",10.00]]},
       {name:"Borda Catupiry", desc:"Adicione borda recheada com catupiry.", variants:[["Borda",10.00]]},
@@ -488,8 +633,9 @@ const MENU = [
     id:"bebidas", nav:"bebidas", title:"Bebidas, Milk Shake & Sucos",
     items:[
       {group:"Milk Shake"},
-      {name:"Milk Shake de Morango", variants:[["300ml",15.00],["500ml",19.00]]},
+      {name:"Milk Shake de Paçoca", variants:[["300ml",15.00],["500ml",19.00]]},
       {name:"Milk Shake de Ninho", variants:[["300ml",15.00],["500ml",19.00]]},
+      {name:"Milk Shake de Nutella", variants:[["300ml",19.00],["500ml",25.00]]},
       {group:"Sucos Naturais (500ml)"},
       {name:"Suco de Laranja", variants:[["500ml",14.00]]},
       {name:"Suco de Limão", variants:[["500ml",12.00]]},
@@ -499,7 +645,6 @@ const MENU = [
       {name:"Suco de Abacaxi com Hortelã", variants:[["Copo",12.00]]},
       {name:"Suco de Goiaba", variants:[["Copo",12.00]]},
       {group:"Refrigerantes"},
-      {name:"Coca-Cola P", variants:[["Unidade",5.00]]},
       {name:"Guaraná P", variants:[["Unidade",5.00]]},
       {name:"Coca-Cola Lata", variants:[["Unidade",6.50]]},
       {name:"Guaraná Lata", variants:[["Unidade",5.50]]},
@@ -509,16 +654,15 @@ const MENU = [
       {group:"Outros"},
       {name:"Água", variants:[["Unidade",3.00]]},
       {name:"Suco P", variants:[["Copo",5.00]]},
-      {name:"Suco G", variants:[["Copo",9.00]]},
+      {name:"Suco 1L", variants:[["Copo",9.00]]},
     ]
   },
   {
     id:"acai", nav:"acai", title:"Açaí & Vitaminas",
     items:[
-      {name:"Açaí 300ml", desc:"Acompanha 4 adicionais à sua escolha.", variants:[["300ml",15.00]]},
-      {name:"Açaí 500ml", desc:"Acompanha 4 adicionais à sua escolha.", variants:[["500ml",18.00]]},
-      {name:"Açaí na Marmita 750ml", desc:"Acompanha todos os adicionais.", variants:[["750ml",32.00]]},
-      {name:"Adicional extra de açaí", desc:"Amendoim triturado, banana, bis, confete, granola, leite condensado, leite em pó, oreo ou paçoca — além dos 4 inclusos.", variants:[["Cada adicional extra",2.00]]},
+      {name:"Açaí 300ml", desc:"Escolha 4 acompanhamentos grátis.", variants:[["300ml",15.00]], acai:true},
+      {name:"Açaí 500ml", desc:"Escolha 4 acompanhamentos grátis.", variants:[["500ml",18.00]], acai:true},
+      {name:"Açaí na Marmita 750ml", desc:"Escolha 4 acompanhamentos grátis (ou mais, por uma taxa extra).", variants:[["750ml",32.00]], acai:true},
       {group:"Vitaminas"},
       {name:"Vitamina de Açaí", desc:"500ml de açaí + leite Ninho.", variants:[["Vitamina",18.00]]},
       {name:"Vitamina de Banana", desc:"Banana + leite Ninho + granola + paçoca.", variants:[["Vitamina",20.00]]},
@@ -537,6 +681,12 @@ MENU.forEach(section=>{
   sec.className = 'section';
   sec.id = section.id;
   sec.innerHTML = `<div class="section-head"><h2>${section.title}</h2>${section.subtitle? `<p>${section.subtitle}</p>`:''}</div>`;
+
+  /* Card especial de pizza meio a meio, no topo da seção de pizzas */
+  if(section.id === 'pizzas'){
+    sec.appendChild(buildHalfHalfCard(section));
+  }
+
   const grid = document.createElement('div');
   grid.className = 'grid';
 
@@ -562,6 +712,22 @@ MENU.forEach(section=>{
       priceHtml = `${item.oldPrice ? `<span class="old-price">R$ ${fmt(item.oldPrice)}</span>`:''}<span class="price">R$ ${fmt(singlePrice)}</span>`;
     }
 
+    const isAcai = !!item.acai;
+
+    let bottomHtml = '';
+    if(isAcai){
+      bottomHtml = `<div>${priceHtml}</div><button class="add-btn" onclick="openToppingsModal('${escapeAttr(item.name)}','${escapeAttr(item.variants[0][0])}',${item.variants[0][1]})">Adicionar</button>`;
+    } else if(hasMultiVariant){
+      bottomHtml = `<div class="variant-row">${item.variants.map((v,i)=>`
+          <button class="variant-btn" onclick="addToCart('${escapeAttr(item.name)}','${escapeAttr(v[0])}',${v[1]},${itemUid}_${i})">
+            <span>${v[0]}</span><span class="v-price">R$ ${fmt(v[1])}</span>
+          </button>`).join('')}</div>`;
+    } else if(item.variants.length === 1){
+      bottomHtml = `<div>${priceHtml}</div><button class="add-btn" onclick="addToCart('${escapeAttr(item.name)}','${escapeAttr(item.variants[0][0])}',${item.variants[0][1]})">Adicionar</button>`;
+    } else {
+      bottomHtml = `<div class="card-note">Combine no WhatsApp</div>`;
+    }
+
     card.innerHTML = `
       <div class="card-top">
         <div>
@@ -571,14 +737,7 @@ MENU.forEach(section=>{
         </div>
       </div>
       <div class="card-bottom">
-        ${hasMultiVariant ? `<div class="variant-row">${item.variants.map((v,i)=>`
-          <button class="variant-btn" onclick="addToCart('${escapeAttr(item.name)}','${escapeAttr(v[0])}',${v[1]},${itemUid}_${i})">
-            <span>${v[0]}</span><span class="v-price">R$ ${fmt(v[1])}</span>
-          </button>`).join('')}</div>`
-          : item.variants.length === 1
-            ? `<div>${priceHtml}</div><button class="add-btn" onclick="addToCart('${escapeAttr(item.name)}','${escapeAttr(item.variants[0][0])}',${item.variants[0][1]})">Adicionar</button>`
-            : `<div class="card-note">Combine no WhatsApp</div>`
-        }
+        ${bottomHtml}
       </div>
     `;
     grid.appendChild(card);
@@ -590,6 +749,162 @@ MENU.forEach(section=>{
 
 function fmt(n){ return n.toFixed(2).replace('.',','); }
 function escapeAttr(s){ return String(s).replace(/'/g, "\\'"); }
+
+/* ---------------- PIZZA MEIO A MEIO ---------------- */
+function buildHalfHalfCard(section){
+  const wrap = document.createElement('div');
+  wrap.className = 'half-half-card';
+
+  const pizzaOptions = section.items.filter(i => !i.group && i.price);
+  const optionsHtml = pizzaOptions.map(p => `<option value="${p.name}" data-price="${p.price}">${p.name} — R$ ${fmt(p.price)}</option>`).join('');
+
+  wrap.innerHTML = `
+    <h3>🍕 Monte sua Pizza Meio a Meio</h3>
+    <p>Escolha os dois sabores. O valor cobrado é o do sabor mais caro entre as duas metades.</p>
+    <div class="half-half-row">
+      <select id="halfFlavor1">
+        <option value="">1ª metade</option>
+        ${optionsHtml}
+      </select>
+      <select id="halfFlavor2">
+        <option value="">2ª metade</option>
+        ${optionsHtml}
+      </select>
+    </div>
+    <div class="half-half-foot">
+      <span class="price" id="halfHalfPrice">R$ 0,00</span>
+      <button class="add-btn" onclick="addHalfHalfPizza()">Adicionar ao pedido</button>
+    </div>
+  `;
+
+  wrap.querySelector('#halfFlavor1').addEventListener('change', updateHalfHalfPrice);
+  wrap.querySelector('#halfFlavor2').addEventListener('change', updateHalfHalfPrice);
+
+  return wrap;
+}
+
+function updateHalfHalfPrice(){
+  const s1 = document.getElementById('halfFlavor1');
+  const s2 = document.getElementById('halfFlavor2');
+  const p1 = s1.selectedOptions[0] ? parseFloat(s1.selectedOptions[0].dataset.price || 0) : 0;
+  const p2 = s2.selectedOptions[0] ? parseFloat(s2.selectedOptions[0].dataset.price || 0) : 0;
+  const price = Math.max(p1, p2);
+  document.getElementById('halfHalfPrice').textContent = 'R$ ' + fmt(price);
+}
+
+function addHalfHalfPizza(){
+  const s1 = document.getElementById('halfFlavor1');
+  const s2 = document.getElementById('halfFlavor2');
+  const f1 = s1.value, f2 = s2.value;
+  if(!f1 || !f2 || f1 === f2){
+    alert('Escolha dois sabores diferentes para montar sua pizza meio a meio.');
+    return;
+  }
+  const p1 = parseFloat(s1.selectedOptions[0].dataset.price || 0);
+  const p2 = parseFloat(s2.selectedOptions[0].dataset.price || 0);
+  const price = Math.max(p1, p2);
+  addToCart('Pizza Meio a Meio', `${f1} / ${f2}`, price);
+  s1.value = '';
+  s2.value = '';
+  updateHalfHalfPrice();
+}
+
+/* ---------------- MODAL DE ACOMPANHAMENTOS DE AÇAÍ ---------------- */
+let toppingsCtx = null; // {name, variant, basePrice}
+let toppingsSelected = new Set();
+
+function openToppingsModal(name, variant, basePrice){
+  toppingsCtx = {name, variant, basePrice};
+  toppingsSelected = new Set();
+
+  document.getElementById('toppingsModalTitle').textContent = `${name} — escolha seus acompanhamentos`;
+
+  const list = document.getElementById('toppingsList');
+  list.innerHTML = ACAI_TOPPINGS.map((t,i) => `
+    <label class="topping-row" id="toppingRow${i}" onclick="toggleTopping(${i}, event)">
+      <span class="t-name">${t}</span>
+      <span style="display:flex; align-items:center; gap:8px;">
+        <span class="t-extra" id="toppingExtra${i}" style="display:none;">+R$ 2,00</span>
+        <input type="checkbox" id="toppingCheck${i}" />
+      </span>
+    </label>
+  `).join('');
+
+  updateToppingsSummary();
+  document.getElementById('toppingsModal').classList.add('open');
+}
+
+function toggleTopping(i, ev){
+  ev.preventDefault();
+  const checkbox = document.getElementById(`toppingCheck${i}`);
+  const row = document.getElementById(`toppingRow${i}`);
+  if(toppingsSelected.has(i)){
+    toppingsSelected.delete(i);
+    checkbox.checked = false;
+    row.classList.remove('checked');
+  } else {
+    toppingsSelected.add(i);
+    checkbox.checked = true;
+    row.classList.add('checked');
+  }
+  updateToppingsSummary();
+}
+
+function updateToppingsSummary(){
+  const count = toppingsSelected.size;
+  const extraCount = Math.max(0, count - ACAI_FREE_COUNT);
+  const extraPrice = extraCount * ACAI_EXTRA_PRICE;
+
+  ACAI_TOPPINGS.forEach((t,i)=>{
+    const extraLabel = document.getElementById(`toppingExtra${i}`);
+    if(!extraLabel) return;
+    extraLabel.style.display = (toppingsSelected.has(i) && isExtraTopping(i)) ? 'inline' : 'none';
+  });
+
+  document.getElementById('toppingsCountLabel').textContent =
+    `${count} selecionado${count===1?'':'s'}${extraCount>0 ? ` (${extraCount} extra${extraCount===1?'':'s'})` : ''}`;
+  document.getElementById('toppingsExtraPrice').textContent =
+    extraPrice > 0 ? `+R$ ${fmt(extraPrice)}` : 'Grátis até 4';
+}
+
+/* marca como "extra" os itens selecionados além dos 4 primeiros escolhidos (ordem de seleção) */
+function isExtraTopping(i){
+  const order = Array.from(toppingsSelected);
+  const idx = order.indexOf(i);
+  return idx >= ACAI_FREE_COUNT;
+}
+
+function closeToppingsModal(){
+  document.getElementById('toppingsModal').classList.remove('open');
+  toppingsCtx = null;
+}
+
+function confirmToppings(){
+  if(!toppingsCtx) return;
+  const count = toppingsSelected.size;
+  const extraCount = Math.max(0, count - ACAI_FREE_COUNT);
+  const extraPrice = extraCount * ACAI_EXTRA_PRICE;
+  const finalPrice = toppingsCtx.basePrice + extraPrice;
+
+  const names = Array.from(toppingsSelected).map(i => ACAI_TOPPINGS[i]);
+  const variantLabel = names.length > 0
+    ? `${toppingsCtx.variant} — ${names.join(', ')}`
+    : toppingsCtx.variant;
+
+  addToCart(toppingsCtx.name, variantLabel, finalPrice);
+  closeToppingsModal();
+}
+
+/* preenche o select de bairros a partir da lista BAIRROS_ENTREGA */
+(function populateBairros(){
+  const sel = document.getElementById('bairroSelect');
+  BAIRROS_ENTREGA.forEach((b, i)=>{
+    const opt = document.createElement('option');
+    opt.value = i;
+    opt.textContent = `${b.bairro} — R$ ${fmt(b.taxa)}`;
+    sel.appendChild(opt);
+  });
+})();
 
 /* nav active state on scroll */
 const pills = document.querySelectorAll('.cat-pill');
@@ -633,16 +948,43 @@ function removeItem(idx){
   renderCart();
 }
 
-function cartTotal(){
+function cartSubtotal(){
   return cart.reduce((sum,c)=> sum + c.price*c.qty, 0);
 }
 function cartCount(){
   return cart.reduce((sum,c)=> sum + c.qty, 0);
 }
 
+/* retorna a taxa de entrega atual, ou null se não se aplica (retirada ou bairro não selecionado) */
+function currentDeliveryFee(){
+  const delivery = document.getElementById('deliveryType').value;
+  if(delivery !== 'Delivery') return null;
+  const sel = document.getElementById('bairroSelect');
+  if(sel.value === '') return null;
+  return BAIRROS_ENTREGA[parseInt(sel.value, 10)].taxa;
+}
+function currentBairroName(){
+  const sel = document.getElementById('bairroSelect');
+  if(sel.value === '') return null;
+  return BAIRROS_ENTREGA[parseInt(sel.value, 10)].bairro;
+}
+
+function cartTotal(){
+  const fee = currentDeliveryFee();
+  return cartSubtotal() + (fee || 0);
+}
+
 function renderCart(){
   const count = cartCount();
-  const total = cartTotal();
+  const subtotal = cartSubtotal();
+  const delivery = document.getElementById('deliveryType').value;
+  const isDelivery = delivery === 'Delivery';
+
+  document.getElementById('bairroField').style.display = isDelivery ? 'block' : 'none';
+  document.getElementById('addressField').style.display = isDelivery ? 'block' : 'none';
+
+  const fee = currentDeliveryFee();
+  const total = cartSubtotal() + (fee || 0);
 
   const cc = document.getElementById('cartCount');
   cc.style.display = count > 0 ? 'flex' : 'none';
@@ -675,8 +1017,21 @@ function renderCart(){
       </div>
     `).join('');
   }
+
+  document.getElementById('drawerSubtotal').textContent = 'R$ ' + fmt(subtotal);
+
+  const feeRow = document.getElementById('deliveryFeeRow');
+  if(isDelivery && fee !== null){
+    feeRow.style.display = 'flex';
+    document.getElementById('drawerDeliveryFee').textContent = 'R$ ' + fmt(fee);
+  } else {
+    feeRow.style.display = 'none';
+  }
+
   document.getElementById('drawerTotal').textContent = 'R$ ' + fmt(total);
-  document.getElementById('sendBtn').disabled = cart.length === 0;
+
+  const canSend = cart.length > 0 && (!isDelivery || (isDelivery && document.getElementById('bairroSelect').value !== ''));
+  document.getElementById('sendBtn').disabled = !canSend;
 }
 
 function openCart(){
@@ -688,26 +1043,65 @@ function closeCart(){
   document.getElementById('drawer').classList.remove('open');
 }
 
-document.getElementById('deliveryType').addEventListener('change', (e)=>{
-  document.getElementById('addressField').style.display = e.target.value === 'Delivery' ? 'block' : 'none';
+document.getElementById('deliveryType').addEventListener('change', ()=>{
+  renderCart();
 });
+
+function handlePaymentChange(){
+  const isCash = document.getElementById('paymentMethod').value === 'Dinheiro';
+  document.getElementById('needsChangeField').style.display = isCash ? 'block' : 'none';
+  if(!isCash){
+    document.getElementById('needsChange').value = 'Não';
+    document.getElementById('changeForField').style.display = 'none';
+    document.getElementById('changeFor').value = '';
+  } else {
+    handleNeedsChangeChange();
+  }
+}
+
+function handleNeedsChangeChange(){
+  const needsChange = document.getElementById('needsChange').value === 'Sim';
+  document.getElementById('changeForField').style.display = needsChange ? 'block' : 'none';
+  if(!needsChange){ document.getElementById('changeFor').value = ''; }
+}
 
 function sendOrder(){
   if(cart.length === 0) return;
   const name = document.getElementById('custName').value.trim();
   const delivery = document.getElementById('deliveryType').value;
+  const isDelivery = delivery === 'Delivery';
   const address = document.getElementById('address').value.trim();
   const obs = document.getElementById('obs').value.trim();
+  const bairro = currentBairroName();
+  const fee = currentDeliveryFee();
+  const paymentMethod = document.getElementById('paymentMethod').value;
+  const needsChange = document.getElementById('needsChange').value;
+  const changeFor = document.getElementById('changeFor').value.trim();
 
-  let msg = ` *Pedido Gran Império* \n\n`;
+  let msg = `Pedido Gran Império\n\n`;
   cart.forEach(c=>{
     msg += `▪️ ${c.qty}x ${c.name} (${c.variant}) — R$ ${fmt(c.price*c.qty)}\n`;
   });
-  msg += `\n*Total: R$ ${fmt(cartTotal())}*\n`;
-  msg += `\n*Entrega:* ${delivery}`;
-  if(delivery === 'Delivery' && address){ msg += `\n*Endereço:* ${address}`; }
-  if(name){ msg += `\n*Nome:* ${name}`; }
-  if(obs){ msg += `\n*Obs:* ${obs}`; }
+  msg += `\nSubtotal: R$ ${fmt(cartSubtotal())}`;
+  if(isDelivery && fee !== null){
+    msg += `\nTaxa de entrega (${bairro}): R$ ${fmt(fee)}`;
+  }
+  msg += `\nTotal: R$ ${fmt(cartTotal())}\n`;
+  msg += `\nEntrega: ${delivery}`;
+  if(isDelivery){
+    if(bairro){ msg += `\nBairro: ${bairro}`; }
+    if(address){ msg += `\nEndereço: ${address}`; }
+  }
+  if(name){ msg += `\nNome: ${name}`; }
+  msg += `\nPagamento: ${paymentMethod}`;
+  if(paymentMethod === 'Dinheiro'){
+    if(needsChange === 'Sim' && changeFor){
+      msg += `\nTroco para: R$ ${changeFor}`;
+    } else {
+      msg += `\nTroco: Não precisa`;
+    }
+  }
+  if(obs){ msg += `\nObs: ${obs}`; }
   msg += `\n\nPedido feito pelo site`;
 
   const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`;
